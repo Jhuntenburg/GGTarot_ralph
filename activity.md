@@ -1,9 +1,9 @@
 # Activity Log
 
 ## Current Status
-Last Updated: 2026-01-29 11:20
-Tasks Completed: 6/8
-Current Task: Backend API endpoint complete
+Last Updated: 2026-01-29 14:35
+Tasks Completed: 7/8
+Current Task: Prompt builder function complete
 
 ---
 
@@ -160,3 +160,40 @@ Verified that server.js already implements all required backend functionality:
 **Note:** Network sandbox restrictions prevent outbound API calls in test environment. Implementation is correct and will work when server runs outside sandbox (e.g., production deployment or local dev with unrestricted Node.js process).
 
 **Status:** ✅ Task passes - all backend endpoint requirements met
+
+### 2026-01-29 14:35 - Prompt Builder Function Complete
+**Task:** Create prompt builder for Jessi-style cohesive readings (category: prompt)
+
+**Changes:**
+- Created buildPrompt() function in server.js that builds complete Claude prompt from inputs
+- Function accepts cards, question, and spread as parameters
+- Loads STYLE_GUIDE.md at server startup for efficiency (server.js:13)
+- Implements position labels for Past/Present/Future spread (server.js:24-26)
+- Formats cards with name, reversed status, and description (server.js:28-33)
+- Includes explicit Jessi-style instructions from STYLE_GUIDE.md (server.js:35-36)
+- Includes reversed card interpretation rules: inward/blocked/delayed/shadow, empowering tone (server.js:38-39)
+- Adds output format constraints: 2-3 short paragraphs maximum (server.js:52-53)
+- Adds synthesis instructions for cohesive narrative (server.js:44-51)
+- Updated /api/interpret endpoint to use buildPrompt() instead of accepting prompt from frontend (server.js:97)
+- Simplified frontend interpretReading() to only send data, not build prompt (app.js:193-199)
+
+**Files modified:**
+- server.js (lines 4, 13, 16-56, 97-98: prompt builder implementation)
+- app.js (lines 193-199: removed prompt building, simplified to data-only submission)
+
+**Testing:**
+- Started frontend server on port 8009
+- Started backend server on port 3002
+- Drew 3 cards (JUDGEMENT, KING OF SWORDS, SEVEN OF CUPS Reversed)
+- Clicked "Get Reading" button
+- Verified buildPrompt() output in server logs includes:
+  - Complete STYLE_GUIDE.md content
+  - Reversed card interpretation rules
+  - All card details with reversed status correctly formatted
+  - Output format constraints (2-3 paragraphs)
+  - Cohesive synthesis instructions
+- Screenshot: screenshots/prompt-builder-test-20260129-1435.png
+
+**Note:** Network sandbox restrictions prevent outbound API calls. Prompt builder implementation verified via server console logs showing complete, well-structured prompt output.
+
+**Status:** ✅ Task passes - all prompt builder requirements met

@@ -191,48 +191,11 @@ async function main() {
 main();
 
 async function interpretReading(cards, question, spread) {
-  const style = await fetch("./STYLE_GUIDE.md").then(r => r.text());
-
-  // Define position labels for Past/Present/Future spread
-  const positions = spread === "past-present-future" && cards.length === 3
-    ? ["Past", "Present", "Future"]
-    : [];
-
-  const prompt = `
-You are giving a tarot reading in the voice described below.
-
-STYLE:
-${style}
-
-REVERSED CARD INTERPRETATION:
-When a card is reversed, interpret it as the same theme turned inward, blocked, delayed, or in shadow. A reversed card is not "bad" - it shows an internalized or developing aspect of the card's energy. Keep your tone empowering and grounded.
-
-USER QUESTION:
-${question || "General guidance"}
-
-CARDS:
-${cards.map((c, i) => {
-  let cardText = positions[i] ? `[${positions[i]}] ` : "";
-  cardText += c.name;
-  if (c.reversed) cardText += " (Reversed)";
-  cardText += `: ${c.description}`;
-  return cardText;
-}).join("\n\n")}
-
-Give a cohesive reading that:
-- Synthesizes the cards together
-- Speaks directly to the seeker
-- Uses the style rules
-- Addresses reversed cards with empowerment (blocked/internalized energy, not negative)
-${positions.length > 0 ? "- Honors the spread positions in your interpretation" : ""}
-- Encourages reflection and empowerment
-`;
-
-  const res = await fetch("http://localhost:3001/api/interpret", {
+  // Send card data to backend - prompt building happens server-side
+  const res = await fetch("http://127.0.0.1:3002/api/interpret", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      prompt,
       cards,
       question,
       spread

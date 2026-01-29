@@ -40,7 +40,7 @@ Build a tarot reading app using Jessi Huntenburg’s deck and interpretation sty
 "Add reversed rules: inward/blocked/delayed/shadow—never fatalistic",
 "Add output format constraints (short sections + practical takeaway)"
 ],
-"passes": false
+"passes": true
 },
 {
 "category": "ux",

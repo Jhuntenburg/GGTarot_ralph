@@ -1,16 +1,78 @@
 import express from "express";
 import fetch from "node-fetch";
+import cors from "cors";
+import { readFileSync } from "fs";
 
 const app = express();
-app.use(express.json());
 
-// Enable CORS for local development
+// Load style guide once at startup
+const STYLE_GUIDE = readFileSync("./STYLE_GUIDE.md", "utf-8");
+
+/**
+ * Build a cohesive prompt for Jessi-style tarot readings
+ * @param {Array} cards - Array of card objects with {name, description, reversed, position}
+ * @param {string} question - User's question or empty for general guidance
+ * @param {string} spread - Spread type (e.g., "simple" or "past-present-future")
+ * @returns {string} Complete prompt for Claude API
+ */
+function buildPrompt(cards, question, spread) {
+  // Define position labels for Past/Present/Future spread
+  const positions = spread === "past-present-future" && cards.length === 3
+    ? ["Past", "Present", "Future"]
+    : [];
+
+  const cardsText = cards.map((c, i) => {
+    let cardText = positions[i] ? `[${positions[i]}] ` : "";
+    cardText += c.name;
+    if (c.reversed) cardText += " (Reversed)";
+    if (c.description) cardText += `: ${c.description}`;
+    return cardText;
+  }).join("\n\n");
+
+  return `You are giving a tarot reading in the voice described below.
+
+STYLE:
+${STYLE_GUIDE}
+
+REVERSED CARD INTERPRETATION:
+When a card is reversed, interpret it as the same theme turned inward, blocked, delayed, or in shadow. A reversed card is not "bad" - it shows an internalized or developing aspect of the card's energy. Keep your tone empowering and grounded.
+
+USER QUESTION:
+${question || "General guidance"}
+
+CARDS:
+${cardsText}
+
+Give a cohesive reading that:
+- Synthesizes the cards together into a unified narrative
+- Speaks directly to the seeker with warmth and compassion
+- Uses the style rules above (warm, grounded, empowering)
+- Addresses reversed cards with empowerment (blocked/internalized energy, not negative)
+${positions.length > 0 ? "- Honors the spread positions (Past/Present/Future) in your interpretation" : ""}
+- Encourages reflection and empowerment
+- Ends with a practical takeaway or grounding question for the seeker
+
+FORMAT:
+Keep sections short and readable. Use 2-3 short paragraphs maximum.`;
+}
+
+// Manual CORS middleware (must be first)
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  res.header("Access-Control-Allow-Methods", "POST");
+  console.log(`[CORS] ${req.method} ${req.path}`);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Handle OPTIONS immediately
+  if (req.method === 'OPTIONS') {
+    console.log('[CORS] Handling OPTIONS request');
+    return res.status(204).end();
+  }
+
   next();
 });
+
+app.use(express.json());
 
 app.post("/api/interpret", async (req, res) => {
   try {
@@ -36,13 +98,11 @@ app.post("/api/interpret", async (req, res) => {
       });
     }
 
-    // Build prompt from validated inputs
-    const prompt = req.body.prompt;
-    if (!prompt) {
-      return res.status(400).json({
-        error: "Invalid request: prompt is required."
-      });
-    }
+    // Build prompt using the buildPrompt function
+    const prompt = buildPrompt(cards, question, spread);
+    console.log("=== PROMPT BUILDER OUTPUT ===");
+    console.log(prompt);
+    console.log("=== END PROMPT ===");
 
     // Call Anthropic API
     const r = await fetch("https://api.anthropic.com/v1/messages", {
@@ -53,7 +113,7 @@ app.post("/api/interpret", async (req, res) => {
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        model: "claude-3-5-sonnet-latest",
+        model: "claude-3-5-sonnet-20241022",
         max_tokens: 600,
         messages: [{ role: "user", content: prompt }]
       })
@@ -88,4 +148,4 @@ app.post("/api/interpret", async (req, res) => {
   }
 });
 
-app.listen(3001, () => console.log("Interpreter server on 3001"));
+app.listen(3002, () => console.log("Interpreter server on 3002"));
