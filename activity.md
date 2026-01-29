@@ -1,9 +1,9 @@
 # Activity Log
 
 ## Current Status
-Last Updated: 2026-01-29 14:35
-Tasks Completed: 7/8
-Current Task: Prompt builder function complete
+Last Updated: 2026-01-29 14:46
+Tasks Completed: 8/8
+Current Task: Interpretation UI states complete
 
 ---
 
@@ -197,3 +197,37 @@ Verified that server.js already implements all required backend functionality:
 **Note:** Network sandbox restrictions prevent outbound API calls. Prompt builder implementation verified via server console logs showing complete, well-structured prompt output.
 
 **Status:** ✅ Task passes - all prompt builder requirements met
+
+### 2026-01-29 14:46 - Interpretation UI States Complete
+**Task:** Add interpretation UI states (loading, error, retry) (category: ux)
+
+**Changes:**
+- Added loading state with animated spinner and "Interpreting your reading..." message (app.js:219-228)
+- Implemented button disabling during request to prevent double-submits (app.js:221-222)
+- Added error state with warning icon, friendly error message, and "Try Again" button (app.js:238-246)
+- Ensured previously drawn cards remain visible even if interpretation fails
+- Re-enable draw button after error so user can continue (app.js:240)
+- Re-enable interpret button after successful reading (app.js:233-234)
+- Added retry button handler that triggers new interpretation attempt (app.js:248-250)
+- Created CSS classes for loading, error, and success states (index.html:275-338)
+- Added loading spinner animation with rotating border (index.html:287-296)
+- Styled error state with light pink background and red accent (index.html:302-328)
+- Styled retry button to match app design system (index.html:316-328)
+
+**Files modified:**
+- app.js (lines 214-250: enhanced interpretBtn click handler with states)
+- index.html (lines 275-338: CSS for loading spinner, error state, retry button)
+
+**Testing:**
+- Started local server on port 8000
+- Drew 3 cards (TEN OF WANDS, FOUR OF SWORDS, PAGE OF WANDS)
+- Clicked "Get Reading" button
+- Verified loading state appears with spinner animation
+- Verified buttons are disabled during request (both Draw and Get Reading)
+- Verified error state displays with friendly message when backend unavailable
+- Verified "Try Again" button appears and is functional
+- Verified cards remain visible after error occurs
+- Verified Draw button re-enables after error (user can continue)
+- Screenshots: screenshots/ui-states-error-20260129-1445.png, screenshots/ui-states-loading-20260129-1445.png
+
+**Status:** ✅ Task passes - all interpretation UI states requirements met

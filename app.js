@@ -215,14 +215,46 @@ document.getElementById("interpretBtn").addEventListener("click", async () => {
   const question = document.getElementById("question").value;
   const spread = window.lastSpread || document.getElementById("spread").value;
   const interpretation = document.getElementById("interpretation");
+  const interpretBtn = document.getElementById("interpretBtn");
+  const drawBtn = document.getElementById("drawBtn");
 
-  interpretation.textContent = "Interpreting...";
+  // Disable buttons during request to prevent double-submits
+  interpretBtn.disabled = true;
+  drawBtn.disabled = true;
+
+  // Show loading state
+  interpretation.className = "interpretation-loading";
+  interpretation.innerHTML = `
+    <div class="loading-spinner"></div>
+    <p>Interpreting your reading...</p>
+  `;
   interpretation.style.display = "block";
 
   try {
     const text = await interpretReading(window.lastDraw, question, spread);
+
+    // Display successful reading
+    interpretation.className = "interpretation-success";
     interpretation.textContent = text;
+
+    // Re-enable buttons after success
+    interpretBtn.disabled = false;
+    drawBtn.disabled = false;
   } catch (err) {
-    interpretation.textContent = `Error: ${err.message || "Failed to get reading. Is the server running?"}`;
+    // Show friendly error message with retry button
+    interpretation.className = "interpretation-error";
+    interpretation.innerHTML = `
+      <div class="error-icon">⚠</div>
+      <p class="error-message">Unable to generate reading. ${err.message || "Please check that the server is running."}</p>
+      <button class="retry-btn" id="retryBtn">Try Again</button>
+    `;
+
+    // Re-enable draw button so user can continue
+    drawBtn.disabled = false;
+
+    // Add retry button handler
+    document.getElementById("retryBtn").addEventListener("click", () => {
+      document.getElementById("interpretBtn").click();
+    });
   }
 });

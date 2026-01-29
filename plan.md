@@ -51,7 +51,7 @@ Build a tarot reading app using Jessi Huntenburg’s deck and interpretation sty
 "Show friendly error message on failure with a retry button",
 "Keep previously drawn cards visible even if interpretation fails"
 ],
-"passes": false
+"passes": true
 },
 {
 "category": "ux",
