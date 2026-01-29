@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 const app = express();
 app.use(express.json());
 
-app.post("/interpret", async (req, res) => {
+app.post("/api/interpret", async (req, res) => {
   const prompt = req.body.prompt;
 
   const r = await fetch("https://api.anthropic.com/v1/messages", {

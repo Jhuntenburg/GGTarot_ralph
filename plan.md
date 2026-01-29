@@ -6,49 +6,92 @@ Build a tarot reading app using Jessi Huntenburg’s deck and interpretation sty
 ---
 
 ## Tasks
-
-[[
-  {
-    "category": "ux",
-    "description": "Improve layout styling and spacing",
-    "steps": [
-      "Make layout feel more like a tarot app (soft background, elegant spacing, better typography)",
-      "Incorporate visual motif from images/cards/CardBack.png (e.g., header mark / subtle pattern / border styling) suitable for marketing/brand consistency",
-      "Use a color palette that feels drawn from the card artwork (warm neutrals + accents). Do not hardcode exact colors from a single card; choose a cohesive palette that matches the deck vibe",
-      "Add card flipping animation using images/cards/CardBack.png as the back face",
-      "Ensure cards display cleanly on mobile (no horizontal scroll, readable text, images scale nicely)"
-    ],
-    "passes": true
-  },
-  {
-    "category": "feature",
-    "description": "Add Past/Present/Future spread option",
-    "steps": [
-      "Add spread selector UI with at least: 'Simple' (no positions) and 'Past / Present / Future'",
-      "When spread is Past/Present/Future and count is 3, map cards to positions in that order",
-      "Display position labels above each card"
-    ],
-    "passes": true
-  },
-  {
-    "category": "feature",
-    "description": "Add reversed card logic",
-    "steps": [
-      "Randomly mark ~20-30% of drawn cards as reversed",
-      "Show a clear reversed indicator in UI (e.g., 'Reversed' label) and visually rotate the card image 180deg when reversed",
-      "Include reversed state in the interpretation input so the AI can reference it"
-    ],
-    "passes": true
-  },
-  {
-    "category": "feature",
-    "description": "Improve interpretation prompt structure",
-    "steps": [
-      "Pass spread positions into prompt (if present)",
-      "Pass reversed state into prompt for each card",
-      "Add explicit instruction for reversed interpretation: treat as blocked/internalized/shadow expression of the upright theme; remain empowering and non-fatalistic",
-      "Ensure readings feel cohesive and Jessi-style (STYLE_GUIDE.md rules)"
-    ],
-    "passes": true
-  }
+```json
+[
+{
+"category": "feature",
+"description": "Add 'Get Reading' button and wire it to AI endpoint",
+"steps": [
+"Add a visible 'Get Reading' button below the question input (disabled until a draw exists)",
+"On click, POST to /api/interpret with: question, spread, cards[] (id, name, reversed, position label if any)",
+"Render the returned text into a 'Reading' panel on the page"
+],
+"passes": true
+},
+{
+"category": "backend",
+"description": "Create /api/interpret endpoint (Claude) with safe config",
+"steps": [
+"Implement an express server route POST /api/interpret",
+"Read ANTHROPIC_API_KEY from environment (do not store in repo)",
+"Call Anthropic/Claude API and return plain text JSON { reading: string }",
+"Add basic validation (must include cards, count 1-5 only)",
+"Return helpful errors (400 validation, 500 upstream failure) without leaking secrets"
+],
+"passes": false
+},
+{
+"category": "prompt",
+"description": "Create prompt builder for Jessi-style cohesive readings",
+"steps": [
+"Create a single function that builds the Claude prompt from inputs",
+"Include: question, spread name, each card (name, reversed, position, description excerpt optional)",
+"Add explicit Jessi-style instruction from STYLE_GUIDE.md",
+"Add reversed rules: inward/blocked/delayed/shadow—never fatalistic",
+"Add output format constraints (short sections + practical takeaway)"
+],
+"passes": false
+},
+{
+"category": "ux",
+"description": "Add interpretation UI states (loading, error, retry)",
+"steps": [
+"Show loading state while AI is generating reading",
+"Disable buttons during request to avoid double-submits",
+"Show friendly error message on failure with a retry button",
+"Keep previously drawn cards visible even if interpretation fails"
+],
+"passes": false
+},
+{
+"category": "ux",
+"description": "Improve reading output formatting for readability",
+"steps": [
+"Render reading with comfortable line spacing and section headers",
+"Add subtle separators or card-position headings when spread has positions",
+"Ensure mobile readability (font size, line length, spacing)"
+],
+"passes": false
+},
+{
+"category": "ux",
+"description": "Add cost-control + safety guardrails",
+"steps": [
+"Add max tokens / sensible limits server-side",
+'Add a short "This is reflective guidance" disclaimer below reading',
+"Block extremely long questions and return validation error",
+"Log only minimal metadata server-side (no full prompts or keys)"
+],
+"passes": false
+},
+{
+"category": "testing",
+"description": "Add a mock mode for local dev without spending tokens",
+"steps": [
+"Add env flag (e.g., INTERPRETER_MODE=mock|claude)",
+"If mock, return a deterministic fake reading based on cards/spread",
+"Confirm UI behaves the same in mock and real mode"
+],
+"passes": false
+},
+{
+"category": "docs",
+"description": "Document how to run locally (server + UI + env vars)",
+"steps": [
+"Update README with setup steps",
+"Include required env vars and how to run",
+"Include how to enable mock mode"
+],
+"passes": false
+}
 ]

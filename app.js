@@ -154,10 +154,12 @@ async function main() {
 
   // ✅ store last draw for interpretation step
   window.lastDraw = draw;
+  window.lastSpread = spread;
 
   $("questionOut").textContent = question || "(no question provided)";
   renderCards(draw, spread);
   $("reading").style.display = "block";
+  $("interpretBtn").disabled = false;
 });
 
   // btn.addEventListener("click", () => {
@@ -226,7 +228,7 @@ ${positions.length > 0 ? "- Honors the spread positions in your interpretation" 
 - Encourages reflection and empowerment
 `;
 
-  const res = await fetch("http://localhost:3001/interpret", {
+  const res = await fetch("http://localhost:3001/api/interpret", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ prompt })
@@ -237,11 +239,17 @@ ${positions.length > 0 ? "- Honors the spread positions in your interpretation" 
 }
 
 document.getElementById("interpretBtn").addEventListener("click", async () => {
-  const cards = [...document.querySelectorAll(".card")].map((_, i) => window.lastDraw[i]);
   const question = document.getElementById("question").value;
-  const spread = document.getElementById("spread").value;
-  document.getElementById("interpretation").textContent = "Interpreting...";
+  const spread = window.lastSpread || document.getElementById("spread").value;
+  const interpretation = document.getElementById("interpretation");
 
-  const text = await interpretReading(window.lastDraw, question, spread);
-  document.getElementById("interpretation").textContent = text;
+  interpretation.textContent = "Interpreting...";
+  interpretation.style.display = "block";
+
+  try {
+    const text = await interpretReading(window.lastDraw, question, spread);
+    interpretation.textContent = text;
+  } catch (err) {
+    interpretation.textContent = `Error: ${err.message || "Failed to get reading. Is the server running?"}`;
+  }
 });
