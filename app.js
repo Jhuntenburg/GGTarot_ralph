@@ -25,13 +25,47 @@ async function loadDeck() {
   return data.cards;
 }
 
-function renderCards(cards) {
+function renderCards(cards, spread) {
   const container = $("cards");
   container.innerHTML = "";
 
-  for (const c of cards) {
+  // Define position labels for Past/Present/Future spread
+  const positions = spread === "past-present-future" && cards.length === 3
+    ? ["Past", "Present", "Future"]
+    : [];
+
+  for (let i = 0; i < cards.length; i++) {
+    const c = cards[i];
+
+    // Create wrapper for position label + card
+    const wrapper = document.createElement("div");
+    wrapper.className = "card-wrapper";
+
+    // Add position label if applicable
+    if (positions.length > 0) {
+      const label = document.createElement("div");
+      label.className = "position-label";
+      label.textContent = positions[i];
+      wrapper.appendChild(label);
+    }
+
     const wrap = document.createElement("div");
     wrap.className = "card";
+
+    const inner = document.createElement("div");
+    inner.className = "card-inner";
+
+    // Front face (card back initially)
+    const front = document.createElement("div");
+    front.className = "card-face card-front";
+    const backImg = document.createElement("img");
+    backImg.src = "./images/cards/CardBack.png";
+    backImg.alt = "Card back";
+    front.appendChild(backImg);
+
+    // Back face (actual card)
+    const back = document.createElement("div");
+    back.className = "card-face card-back";
 
     const img = document.createElement("img");
     img.src = `./${c.image_url}`;
@@ -48,12 +82,21 @@ function renderCards(cards) {
     desc.className = "desc";
     desc.textContent = c.description;
 
-    wrap.appendChild(img);
-    wrap.appendChild(h);
-    wrap.appendChild(meta);
-    wrap.appendChild(desc);
+    back.appendChild(img);
+    back.appendChild(h);
+    back.appendChild(meta);
+    back.appendChild(desc);
 
-    container.appendChild(wrap);
+    inner.appendChild(front);
+    inner.appendChild(back);
+    wrap.appendChild(inner);
+    wrapper.appendChild(wrap);
+    container.appendChild(wrapper);
+
+    // Staggered flip animation
+    setTimeout(() => {
+      wrap.classList.add("flipped");
+    }, i * 300 + 400);
   }
 }
 
@@ -77,6 +120,7 @@ async function main() {
 
   const question = $("question").value.trim();
   const count = Number($("count").value);
+  const spread = $("spread").value;
 
   if (!Number.isFinite(count) || count < 1) {
     showError("Invalid reading size.");
@@ -94,7 +138,7 @@ async function main() {
   window.lastDraw = draw;
 
   $("questionOut").textContent = question || "(no question provided)";
-  renderCards(draw);
+  renderCards(draw, spread);
   $("reading").style.display = "block";
 });
 

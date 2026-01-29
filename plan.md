@@ -28,7 +28,7 @@ Build a tarot reading app using Jessi Huntenburg’s deck and interpretation sty
       "When spread is Past/Present/Future and count is 3, map cards to positions in that order",
       "Display position labels above each card"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "feature",
