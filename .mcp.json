@@ -2,7 +2,18 @@
   "mcpServers": {
     "playwright": {
       "command": "npx",
-      "args": ["-y", "@playwright/mcp@latest", "--headless", "--output-dir", "."]
+      "args": [
+        "-y",
+        "@playwright/mcp@latest",
+        "--headless",
+        "--output-dir",
+        "screenshots",
+        "--allowed-hosts",
+        "127.0.0.1",
+        "localhost",
+        "--console-level",
+        "info"
+      ]
     }
   }
 }

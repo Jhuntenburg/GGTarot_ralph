@@ -8,7 +8,8 @@
     "allow": [
       "WebFetch(domain:registry.npmjs.org)",
       "WebFetch(domain:github.com)",
-      "mcp__playwright__*"
+      "mcp__playwright__*",
+      "mcp__claude-in-chrome__*"
     ],
     "deny": [
       "Bash(sudo *)",
