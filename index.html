@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Genius Garden Tarot (Lab)</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; line-height: 1.4; }
+    h1 { margin: 0 0 8px; }
+    .sub { color: #555; margin: 0 0 24px; }
+    .panel { border: 1px solid #ddd; border-radius: 12px; padding: 16px; max-width: 980px; }
+    label { display: block; font-weight: 600; margin: 12px 0 6px; }
+    input[type="text"], textarea, select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ccc; box-sizing: border-box; }
+    button { margin-top: 14px; padding: 10px 14px; border-radius: 10px; border: 1px solid #222; background: #222; color: #fff; cursor: pointer; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .error { color: #b00020; margin-top: 10px; }
+    .reading { margin-top: 22px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
+    .card { border: 1px solid #eee; border-radius: 12px; padding: 12px; }
+    .card img { width: 100%; height: auto; border-radius: 10px; display: block; }
+    .card h3 { margin: 10px 0 6px; font-size: 16px; }
+    .meta { color: #666; font-size: 13px; margin: 0 0 10px; }
+    .desc { font-size: 14px; white-space: pre-wrap; }
+    .small { font-size: 12px; color: #666; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Genius Garden Tarot (Lab)</h1>
+  <p class="sub">Local-only prototype: draw 1 / 3 / 5 cards from your deck JSON.</p>
+
+  <div class="panel">
+    <label for="question">Your question / prompt</label>
+    <textarea id="question" rows="3" placeholder="What are you seeking clarity on?"></textarea>
+
+    <label for="count">Reading size</label>
+    <select id="count">
+      <option value="1">1 card</option>
+      <option value="3" selected>3 cards</option>
+      <option value="5">5 cards</option>
+    </select>
+
+    <button id="drawBtn">Draw cards</button>
+    <div id="error" class="error" style="display:none;"></div>
+
+    <div class="reading" id="reading" style="display:none;">
+      <div><strong>Question:</strong> <span id="questionOut"></span></div>
+      <div class="cards" id="cards"></div>
+      <button id="interpretBtn">Interpret Reading</button>
+      <div id="interpretation" style="margin-top:16px; white-space:pre-wrap;"></div>
+      <div class="small">Deck source: <code>data/cards.json</code></div>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
