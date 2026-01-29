@@ -1,0 +1,68 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - heading "Genius Garden Tarot" [level=1] [ref=e3]
+    - paragraph [ref=e4]: "Local-only prototype: draw 1 / 3 / 5 cards from your deck JSON."
+  - generic [ref=e5]:
+    - generic [ref=e6]: Your question / prompt
+    - textbox "Your question / prompt" [ref=e7]:
+      - /placeholder: What are you seeking clarity on?
+      - text: What should I focus on this week?
+    - generic [ref=e8]: Spread type
+    - combobox "Spread type" [ref=e9]:
+      - option "Simple (no positions)"
+      - option "Past / Present / Future" [selected]
+    - generic [ref=e10]: Reading size
+    - combobox "Reading size" [ref=e11]:
+      - option "1 card"
+      - option "3 cards" [selected]
+      - option "5 cards"
+    - button "Draw cards" [active] [ref=e12] [cursor=pointer]
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - strong [ref=e15]: "Question:"
+        - text: What should I focus on this week?
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - generic [ref=e18]: Past
+          - generic [ref=e20]:
+            - img "Card back" [ref=e22]
+            - generic [ref=e23]:
+              - img "THE MAGICIAN" [ref=e24]
+              - heading "THE MAGICIAN" [level=3] [ref=e25]
+              - generic [ref=e26]: "Card #2"
+              - generic [ref=e27]: A mage levitates all four elemental symbols with confidence and ease. His stare is gentle, confident, and penetrating. He draws energy from the heavens above him as he draws energy from the Genius within him to create a field that cushions the cup, wand, sword, and pentacle he wields. He is unflappable and assured of his success. This is what gives him the power to create. The time has come for you to channel your Genius so you can bring your wildest dreams into being. Seize your bag of tricks, spread them out before you, and take stock of what you have to work with. Have confidence in yourself, put your resources to their best use, and believe that your efforts will achieve their desired end. Freely consult your Genius to ensure that you’re acting with bravery and integrity; just because you can, doesn’t mean you should. Getting what you want is only rewarding if you stay true to your values along the way.
+        - generic [ref=e28]:
+          - generic [ref=e29]: Present
+          - generic [ref=e31]:
+            - img "Card back" [ref=e33]
+            - generic [ref=e34]:
+              - img "ACE OF PENTACLES" [ref=e35]
+              - heading "ACE OF PENTACLES" [level=3] [ref=e36]
+              - generic [ref=e37]: "Card #65"
+              - generic [ref=e38]: A disembodied hand cradles a large pentacle before tall grasses and white clouds. The coin represents the potential for earthly manifestation, and the hand represents the promise of future materialization for whoever wields the coin. The time has come for you to plant seeds of intention that will grow and ripen into nourishing fruit. Seize this opportunity to start fresh and watch the efforts of your labor blossom into abundance.
+        - generic [ref=e39]:
+          - generic [ref=e40]: Future
+          - generic [ref=e42]:
+            - img "Card back" [ref=e44]
+            - generic [ref=e45]:
+              - img "THE CHARIOT" [ref=e46]
+              - heading "THE CHARIOT" [level=3] [ref=e47]
+              - generic [ref=e48]: "Card #8"
+              - generic [ref=e49]: A traveler sits in half-lotus, ensconced in a canoe that drifts downstream. She’s surrendered to the flow of the river that carries her, trusting that it will lead to a vast ocean of opportunity. Her boat has no oars and her mind has no course. She’s fought the current before, and all it’s done is exhaust her. She knows that when she lets go and lets other forces guide her, she reaches her destination rested and prepared. The Chariot indicates that you’ll move quickly toward your destination once you’re able to get out of your own way. This archetype often illustrates the battle between the higher and lower self and the willpower needed to force them in the same direction. However, the seasoned traveler knows that such battles lead only to stress, exhaustion, and overwhelm. When you take a deep breath and listen to your heart, your higher and lower selves naturally line up to serve you. When you surrender to the flow and let it take you where you’re meant to go, you conserve your energy so you can rise and meet the challenges you encounter on your journey.
+      - button "Get Reading" [ref=e50] [cursor=pointer]
+      - generic [ref=e51]:
+        - generic [ref=e54]:
+          - generic [ref=e55]: "Past: THE MAGICIAN"
+          - paragraph [ref=e56]: The Magician calls you to gather your tools and trust in your creative power. You've been learning, collecting, and preparing—now it's time to act with intention and confidence.
+        - generic [ref=e57]:
+          - generic [ref=e58]: "Present: ACE OF PENTACLES"
+          - paragraph [ref=e59]: "The Ace of Pentacles is an invitation to ground your vision in the material world. This week, plant one clear seed: a new habit, a first step toward a goal, or a tangible act that honors your body and resources."
+        - generic [ref=e60]:
+          - generic [ref=e61]: "Future: THE CHARIOT"
+          - paragraph [ref=e62]: The Chariot suggests that momentum will come not from forcing or striving, but from aligning your will with what already wants to move through you. Let the current carry you. Your job is to stay present and trust the direction.
+        - generic [ref=e63]:
+          - generic [ref=e64]: Synthesis
+          - paragraph [ref=e65]: This week, focus on clarity, grounded action, and surrender. You have everything you need—now let it unfold.
+      - generic [ref=e52]:
+        - text: "Deck source:"
+        - code [ref=e53]: data/cards.json

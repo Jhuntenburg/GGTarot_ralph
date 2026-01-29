@@ -61,7 +61,7 @@ Build a tarot reading app using Jessi Huntenburg’s deck and interpretation sty
 "Add subtle separators or card-position headings when spread has positions",
 "Ensure mobile readability (font size, line length, spacing)"
 ],
-"passes": false
+"passes": true
 },
 {
 "category": "ux",

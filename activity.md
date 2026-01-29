@@ -1,9 +1,9 @@
 # Activity Log
 
 ## Current Status
-Last Updated: 2026-01-29 14:46
-Tasks Completed: 8/8
-Current Task: Interpretation UI states complete
+Last Updated: 2026-01-29 14:51
+Tasks Completed: 9/12
+Current Task: Reading output formatting complete
 
 ---
 
@@ -231,3 +231,42 @@ Verified that server.js already implements all required backend functionality:
 - Screenshots: screenshots/ui-states-error-20260129-1445.png, screenshots/ui-states-loading-20260129-1445.png
 
 **Status:** ✅ Task passes - all interpretation UI states requirements met
+
+### 2026-01-29 14:51 - Reading Output Formatting Complete
+**Task:** Improve reading output formatting for readability (category: ux)
+
+**Changes:**
+- Enhanced #interpretation CSS with improved spacing and typography (index.html:272-335)
+  - Increased padding to 32px for more breathing room
+  - Improved line-height to 1.85 for comfortable reading
+  - Added max-width: 720px to prevent overly long lines
+  - Increased base font-size to 16px for better readability
+- Added structured formatting for paragraphs with 20px bottom margin (index.html:284-291)
+- Added card-section styling with subtle separators (index.html:297-309)
+- Added card-section-title styling with uppercase accent color labels (index.html:311-318)
+- Added mobile-responsive styles for interpretation (index.html:442-452)
+  - Reduced padding to 24px 20px on mobile
+  - Adjusted font-size to 15px for smaller screens
+  - Scaled section titles appropriately
+- Created formatReading() function in app.js (app.js:214-245)
+  - Detects Past/Present/Future spread and structures reading accordingly
+  - Adds position-specific section headers (e.g., "Past: THE MAGICIAN")
+  - Adds "Synthesis" section for concluding paragraphs
+  - Falls back to simple paragraph formatting for other spreads
+- Updated interpretation display to use HTML formatting (app.js:238)
+
+**Files modified:**
+- index.html (lines 272-335, 442-452: enhanced CSS for reading display)
+- app.js (lines 214-245: formatReading function; line 238: use HTML formatting)
+
+**Testing:**
+- Started local server on port 8000
+- Drew 3 cards with Past/Present/Future spread (THE MAGICIAN, ACE OF PENTACLES, THE CHARIOT)
+- Injected mock reading via browser console to test formatting
+- Verified structured sections display correctly with position labels
+- Verified comfortable line spacing and typography
+- Verified max-width prevents overly long lines
+- Verified paragraph separation is clear
+- Screenshots: screenshots/reading-formatting-cards-20260129-1450.png, screenshots/reading-formatting-complete-20260129-1450.png, screenshots/reading-formatting-detail-20260129-1450.png
+
+**Status:** ✅ Task passes - all reading output formatting requirements met

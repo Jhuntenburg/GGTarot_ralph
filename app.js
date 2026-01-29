@@ -211,6 +211,44 @@ async function interpretReading(cards, question, spread) {
   return data.reading;
 }
 
+function formatReading(text, spread, cards) {
+  // If spread has positions (Past/Present/Future), try to structure the reading
+  if (spread === "past-present-future" && cards.length === 3) {
+    const positions = ["Past", "Present", "Future"];
+
+    // Split by double newlines (paragraphs)
+    const paragraphs = text.split(/\n\n+/).filter(p => p.trim());
+
+    // If we have roughly one paragraph per card position, add section headers
+    if (paragraphs.length >= 3) {
+      let formatted = "";
+
+      for (let i = 0; i < Math.min(3, paragraphs.length); i++) {
+        formatted += `<div class="card-section">`;
+        formatted += `<div class="card-section-title">${positions[i]}: ${cards[i].name}${cards[i].reversed ? " (Reversed)" : ""}</div>`;
+        formatted += `<p>${paragraphs[i].trim()}</p>`;
+        formatted += `</div>`;
+      }
+
+      // Add remaining paragraphs as synthesis/conclusion
+      if (paragraphs.length > 3) {
+        formatted += `<div class="card-section">`;
+        formatted += `<div class="card-section-title">Synthesis</div>`;
+        for (let i = 3; i < paragraphs.length; i++) {
+          formatted += `<p>${paragraphs[i].trim()}</p>`;
+        }
+        formatted += `</div>`;
+      }
+
+      return formatted;
+    }
+  }
+
+  // Default: simple paragraph formatting
+  const paragraphs = text.split(/\n\n+/).filter(p => p.trim());
+  return paragraphs.map(p => `<p>${p.trim()}</p>`).join("");
+}
+
 document.getElementById("interpretBtn").addEventListener("click", async () => {
   const question = document.getElementById("question").value;
   const spread = window.lastSpread || document.getElementById("spread").value;
@@ -233,9 +271,9 @@ document.getElementById("interpretBtn").addEventListener("click", async () => {
   try {
     const text = await interpretReading(window.lastDraw, question, spread);
 
-    // Display successful reading
+    // Display successful reading with formatted structure
     interpretation.className = "interpretation-success";
-    interpretation.textContent = text;
+    interpretation.innerHTML = formatReading(text, spread, window.lastDraw);
 
     // Re-enable buttons after success
     interpretBtn.disabled = false;
