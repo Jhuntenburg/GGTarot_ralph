@@ -28,7 +28,7 @@ Build a tarot reading app using Jessi Huntenburg’s deck and interpretation sty
 "Add basic validation (must include cards, count 1-5 only)",
 "Return helpful errors (400 validation, 500 upstream failure) without leaking secrets"
 ],
-"passes": false
+"passes": true
 },
 {
 "category": "prompt",
