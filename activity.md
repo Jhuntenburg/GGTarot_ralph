@@ -1,9 +1,9 @@
 # Activity Log
 
 ## Current Status
-Last Updated: 2026-01-29 14:51
-Tasks Completed: 9/12
-Current Task: Reading output formatting complete
+Last Updated: 2026-01-29 14:58
+Tasks Completed: 10/12
+Current Task: Cost-control + safety guardrails complete
 
 ---
 
@@ -270,3 +270,34 @@ Verified that server.js already implements all required backend functionality:
 - Screenshots: screenshots/reading-formatting-cards-20260129-1450.png, screenshots/reading-formatting-complete-20260129-1450.png, screenshots/reading-formatting-detail-20260129-1450.png
 
 **Status:** ✅ Task passes - all reading output formatting requirements met
+
+### 2026-01-29 14:58 - Cost-Control + Safety Guardrails Complete
+**Task:** Add cost-control + safety guardrails (category: ux)
+
+**Changes:**
+- Added question length validation to block extremely long questions (server.js:101-106)
+  - Questions over 500 characters now return 400 error with helpful message
+  - Prevents API cost abuse and ensures reasonable input size
+- Replaced full prompt logging with minimal metadata logging (server.js:109)
+  - Now logs: spread type, card count, question length only
+  - Removed detailed prompt output from console logs
+  - No API keys or sensitive data in logs
+- Max tokens limit already implemented at 600 (server.js:117) for cost control
+- Added disclaimer below reading display (index.html:489)
+  - Text: "This reading is reflective guidance, not literal prediction. Trust your inner wisdom."
+  - Styled with subtle background, border, padding for visibility (index.html:406-412)
+  - Positioned between "Get Reading" button and deck source credit
+
+**Files modified:**
+- server.js (lines 101-109: question validation and minimal logging)
+- index.html (lines 406-412, 489: disclaimer styling and markup)
+
+**Testing:**
+- Server already running on port 8000
+- Opened http://127.0.0.1:8000 in browser
+- Drew 3 cards (TWO OF CUPS, EIGHT OF PENTACLES Reversed, NINE OF WANDS)
+- Verified disclaimer appears below "Get Reading" button
+- Verified disclaimer has appropriate styling with subtle background
+- Screenshots: screenshots/cost-control-disclaimer-20260129-1455.png, screenshots/cost-control-disclaimer-detail-20260129-1455.png, screenshots/cost-control-disclaimer-visible-20260129-1455.png
+
+**Status:** ✅ Task passes - all cost-control and safety guardrail requirements met

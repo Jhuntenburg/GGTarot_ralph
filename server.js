@@ -98,11 +98,18 @@ app.post("/api/interpret", async (req, res) => {
       });
     }
 
+    // Block extremely long questions (cost control + safety)
+    if (question && question.length > 500) {
+      return res.status(400).json({
+        error: "Question is too long. Please keep it under 500 characters."
+      });
+    }
+
     // Build prompt using the buildPrompt function
     const prompt = buildPrompt(cards, question, spread);
-    console.log("=== PROMPT BUILDER OUTPUT ===");
-    console.log(prompt);
-    console.log("=== END PROMPT ===");
+
+    // Log only minimal metadata (no full prompts or keys)
+    console.log(`[API Request] spread=${spread}, cards=${cards.length}, question_length=${question?.length || 0}`);
 
     // Call Anthropic API
     const r = await fetch("https://api.anthropic.com/v1/messages", {

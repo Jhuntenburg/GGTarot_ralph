@@ -16,7 +16,8 @@
       "Bash(docker *)",
       "Read(./.env)",
       "Read(~/.ssh/**)",
-      "Read(~/.aws/**)"
+      "Read(~/.aws/**)",
+      "Read(~/.config/1Password/**)"
     ],
     "ask": [
       "Bash(git push:*)"

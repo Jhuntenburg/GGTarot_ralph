@@ -411,6 +411,14 @@
       font-style: italic;
     }
 
+    .small.disclaimer {
+      margin-top: 24px;
+      padding: 12px;
+      background: var(--bg-primary);
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+    }
+
     @media (max-width: 640px) {
       body {
         padding: 28px 16px 48px;
@@ -487,6 +495,7 @@
       <div class="cards" id="cards"></div>
       <button id="interpretBtn" disabled>Get Reading</button>
       <div id="interpretation" style="margin-top:16px; white-space:pre-wrap;"></div>
+      <div class="small disclaimer">This reading is reflective guidance, not literal prediction. Trust your inner wisdom.</div>
       <div class="small">Deck source: <code>data/cards.json</code></div>
     </div>
   </div>

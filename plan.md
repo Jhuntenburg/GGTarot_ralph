@@ -72,7 +72,7 @@ Build a tarot reading app using Jessi Huntenburg’s deck and interpretation sty
 "Block extremely long questions and return validation error",
 "Log only minimal metadata server-side (no full prompts or keys)"
 ],
-"passes": false
+"passes": true
 },
 {
 "category": "testing",
