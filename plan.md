@@ -82,7 +82,7 @@ Build a tarot reading app using Jessi Huntenburg’s deck and interpretation sty
 "If mock, return a deterministic fake reading based on cards/spread",
 "Confirm UI behaves the same in mock and real mode"
 ],
-"passes": false
+"passes": true
 },
 {
 "category": "docs",

@@ -2,8 +2,8 @@
 
 ## Current Status
 Last Updated: 2026-01-29 14:58
-Tasks Completed: 10/12
-Current Task: Cost-control + safety guardrails complete
+Tasks Completed: 11/12
+Current Task: Mock mode for local development complete
 
 ---
 
@@ -301,3 +301,45 @@ Verified that server.js already implements all required backend functionality:
 - Screenshots: screenshots/cost-control-disclaimer-20260129-1455.png, screenshots/cost-control-disclaimer-detail-20260129-1455.png, screenshots/cost-control-disclaimer-visible-20260129-1455.png
 
 **Status:** ✅ Task passes - all cost-control and safety guardrail requirements met
+
+### 2026-01-29 14:58 - Mock Mode for Local Development Complete
+**Task:** Add a mock mode for local dev without spending tokens (category: testing)
+
+**Changes:**
+- Added INTERPRETER_MODE environment variable support (server.js:12)
+- Created generateMockReading() function for deterministic mock readings (server.js:60-106)
+  - Generates different reading structures based on spread type
+  - For Past/Present/Future: creates structured sections with position-specific language
+  - For Simple spread: creates general synthesis reading
+  - Handles reversed cards with empowering "in shadow" language
+  - Uses Jessi-style voice consistent with STYLE_GUIDE.md
+- Updated /api/interpret endpoint to check INTERPRETER_MODE (server.js:163-168)
+  - Returns mock reading immediately when mode is 'mock'
+  - Only calls Anthropic API when mode is 'claude'
+  - Logs mode in API request metadata (server.js:162)
+- Updated .env.example to document INTERPRETER_MODE variable
+  - Added clear instructions for mock vs claude modes
+  - Set default to 'mock' for local development
+
+**Files modified:**
+- server.js (lines 12, 60-106, 162-168: mock mode implementation)
+- .env.example (lines 5-8: INTERPRETER_MODE documentation)
+
+**Testing:**
+- Started backend server on port 3002 with INTERPRETER_MODE=mock
+- Started frontend server on port 8001
+- Test 1: Drew 3 cards with Simple spread (FIVE OF PENTACLES, THREE OF CUPS, EIGHT OF PENTACLES)
+  - Clicked "Get Reading" button
+  - Verified mock reading generated successfully
+  - Verified POST /api/interpret returned 200 OK
+  - Screenshot: screenshots/mock-mode-test-20260129-1458.png
+- Test 2: Drew 3 cards with Past/Present/Future spread (EIGHT OF CUPS Reversed, THE HIGH PRIESTESS, NINE OF PENTACLES)
+  - Clicked "Get Reading" button
+  - Verified mock reading generated with structured sections (Past, Present, Future, Synthesis)
+  - Verified reversed card handling ("in shadow" language)
+  - Verified POST /api/interpret returned 200 OK
+  - Screenshots: screenshots/mock-mode-reading-20260129-1458.png, screenshots/mock-mode-spread-20260129-1458.png
+- Verified UI behaves identically in mock mode (same loading states, same formatting, same error handling)
+- Confirmed no API tokens spent during mock mode operation
+
+**Status:** ✅ Task passes - all mock mode requirements met

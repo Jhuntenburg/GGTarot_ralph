@@ -8,6 +8,9 @@ const app = express();
 // Load style guide once at startup
 const STYLE_GUIDE = readFileSync("./STYLE_GUIDE.md", "utf-8");
 
+// Get interpreter mode from environment (default to 'claude')
+const INTERPRETER_MODE = process.env.INTERPRETER_MODE || 'claude';
+
 /**
  * Build a cohesive prompt for Jessi-style tarot readings
  * @param {Array} cards - Array of card objects with {name, description, reversed, position}
@@ -56,6 +59,59 @@ FORMAT:
 Keep sections short and readable. Use 2-3 short paragraphs maximum.`;
 }
 
+/**
+ * Generate a deterministic mock reading for development without spending API tokens
+ * @param {Array} cards - Array of card objects
+ * @param {string} question - User's question
+ * @param {string} spread - Spread type
+ * @returns {string} Mock reading text
+ */
+function generateMockReading(cards, question, spread) {
+  const positions = spread === "past-present-future" && cards.length === 3
+    ? ["Past", "Present", "Future"]
+    : [];
+
+  let reading = "";
+
+  if (positions.length > 0) {
+    // Structured reading for Past/Present/Future spread
+    cards.forEach((card, i) => {
+      const reversedText = card.reversed ? " (in shadow)" : "";
+      reading += `**${positions[i]}: ${card.name}${reversedText}**\n\n`;
+
+      if (i === 0) {
+        reading += `This card speaks to the foundations you've been building${card.reversed ? ", though perhaps in ways you haven't fully acknowledged yet" : ""}. `;
+      } else if (i === 1) {
+        reading += `Right now, you're being invited to ${card.reversed ? "look inward at what's not yet ready to emerge" : "engage fully with what's present"}. `;
+      } else {
+        reading += `Moving forward, the energy of ${card.name}${card.reversed ? " asks you to work through internal blocks first" : " lights the path ahead"}. `;
+      }
+      reading += "\n\n";
+    });
+
+    reading += `**Synthesis**\n\nBeauty, these cards together weave a story of transformation. ${question ? "Your question holds its own wisdom—" : ""}trust what you already know. What feels true in your body as you read this?`;
+  } else {
+    // Simple reading
+    reading += "The cards before you mirror something essential.\n\n";
+
+    const cardNames = cards.map(c => {
+      const reversed = c.reversed ? " in shadow" : "";
+      return `${c.name}${reversed}`;
+    }).join(", ");
+
+    reading += `You've drawn ${cardNames}. `;
+
+    if (cards.some(c => c.reversed)) {
+      reading += "Notice how the reversed cards aren't obstacles, but invitations to look inward. ";
+    }
+
+    reading += `What wants to be integrated here? ${question ? "Your question already contains part of the answer—" : ""}trust the pull of your own Genius.\n\n`;
+    reading += "What small, grounded step feels aligned right now?";
+  }
+
+  return reading;
+}
+
 // Manual CORS middleware (must be first)
 app.use((req, res, next) => {
   console.log(`[CORS] ${req.method} ${req.path}`);
@@ -76,13 +132,6 @@ app.use(express.json());
 
 app.post("/api/interpret", async (req, res) => {
   try {
-    // Check if API key is configured
-    if (!process.env.ANTHROPIC_API_KEY) {
-      return res.status(500).json({
-        error: "Server configuration error. Please contact the administrator."
-      });
-    }
-
     // Validate request body
     const { cards, question, spread } = req.body;
 
@@ -105,11 +154,25 @@ app.post("/api/interpret", async (req, res) => {
       });
     }
 
+    // Log only minimal metadata (no full prompts or keys)
+    console.log(`[API Request] mode=${INTERPRETER_MODE}, spread=${spread}, cards=${cards.length}, question_length=${question?.length || 0}`);
+
+    // Handle mock mode
+    if (INTERPRETER_MODE === 'mock') {
+      console.log('[Mock Mode] Generating deterministic reading');
+      const mockReading = generateMockReading(cards, question, spread);
+      return res.json({ reading: mockReading });
+    }
+
+    // Claude mode - check API key is configured
+    if (!process.env.ANTHROPIC_API_KEY) {
+      return res.status(500).json({
+        error: "Server configuration error. Please contact the administrator."
+      });
+    }
+
     // Build prompt using the buildPrompt function
     const prompt = buildPrompt(cards, question, spread);
-
-    // Log only minimal metadata (no full prompts or keys)
-    console.log(`[API Request] spread=${spread}, cards=${cards.length}, question_length=${question?.length || 0}`);
 
     // Call Anthropic API
     const r = await fetch("https://api.anthropic.com/v1/messages", {
