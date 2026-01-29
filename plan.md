@@ -49,6 +49,6 @@ Build a tarot reading app using Jessi Huntenburg’s deck and interpretation sty
       "Add explicit instruction for reversed interpretation: treat as blocked/internalized/shadow expression of the upright theme; remain empowering and non-fatalistic",
       "Ensure readings feel cohesive and Jessi-style (STYLE_GUIDE.md rules)"
     ],
-    "passes": false
+    "passes": true
   }
 ]
