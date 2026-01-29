@@ -1,5 +1,16 @@
 node_modules
 screenshots
-.cache
+.cache/
 .DS_Store
 .env
+.idea/
+.vscode/
+
+
+# Logs / runtime
+ralph.log
+
+# Node
+node_modules/
+
+# Local cach
