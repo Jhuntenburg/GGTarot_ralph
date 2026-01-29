@@ -169,6 +169,21 @@
       margin-top: 24px;
     }
 
+    .card-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .position-label {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
     .card {
       background: transparent;
       border: none;
@@ -231,6 +246,13 @@
       font-size: 18px;
       font-weight: 500;
       color: var(--text-primary);
+    }
+
+    .reversed-label {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--accent-soft);
+      font-style: italic;
     }
 
     .meta {
@@ -307,6 +329,12 @@
   <div class="panel">
     <label for="question">Your question / prompt</label>
     <textarea id="question" rows="3" placeholder="What are you seeking clarity on?"></textarea>
+
+    <label for="spread">Spread type</label>
+    <select id="spread">
+      <option value="simple">Simple (no positions)</option>
+      <option value="past-present-future">Past / Present / Future</option>
+    </select>
 
     <label for="count">Reading size</label>
     <select id="count">

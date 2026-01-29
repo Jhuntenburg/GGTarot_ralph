@@ -71,8 +71,21 @@ function renderCards(cards, spread) {
     img.src = `./${c.image_url}`;
     img.alt = c.name;
 
+    // Apply 180deg rotation if reversed
+    if (c.reversed) {
+      img.style.transform = "rotate(180deg)";
+    }
+
     const h = document.createElement("h3");
     h.textContent = c.name;
+
+    // Add reversed indicator if applicable
+    if (c.reversed) {
+      const reversedLabel = document.createElement("span");
+      reversedLabel.className = "reversed-label";
+      reversedLabel.textContent = " (Reversed)";
+      h.appendChild(reversedLabel);
+    }
 
     const meta = document.createElement("div");
     meta.className = "meta";
@@ -134,6 +147,11 @@ async function main() {
 
   const draw = shuffleCopy(deck).slice(0, count);
 
+  // Mark some cards as reversed (20-30% probability)
+  draw.forEach(card => {
+    card.reversed = Math.random() < 0.25; // 25% chance
+  });
+
   // ✅ store last draw for interpretation step
   window.lastDraw = draw;
 
@@ -170,8 +188,13 @@ async function main() {
 
 main();
 
-async function interpretReading(cards, question) {
+async function interpretReading(cards, question, spread) {
   const style = await fetch("./STYLE_GUIDE.md").then(r => r.text());
+
+  // Define position labels for Past/Present/Future spread
+  const positions = spread === "past-present-future" && cards.length === 3
+    ? ["Past", "Present", "Future"]
+    : [];
 
   const prompt = `
 You are giving a tarot reading in the voice described below.
@@ -179,16 +202,27 @@ You are giving a tarot reading in the voice described below.
 STYLE:
 ${style}
 
+REVERSED CARD INTERPRETATION:
+When a card is reversed, interpret it as the same theme turned inward, blocked, delayed, or in shadow. A reversed card is not "bad" - it shows an internalized or developing aspect of the card's energy. Keep your tone empowering and grounded.
+
 USER QUESTION:
 ${question || "General guidance"}
 
 CARDS:
-${cards.map(c => `${c.name}: ${c.description}`).join("\n\n")}
+${cards.map((c, i) => {
+  let cardText = positions[i] ? `[${positions[i]}] ` : "";
+  cardText += c.name;
+  if (c.reversed) cardText += " (Reversed)";
+  cardText += `: ${c.description}`;
+  return cardText;
+}).join("\n\n")}
 
 Give a cohesive reading that:
 - Synthesizes the cards together
 - Speaks directly to the seeker
 - Uses the style rules
+- Addresses reversed cards with empowerment (blocked/internalized energy, not negative)
+${positions.length > 0 ? "- Honors the spread positions in your interpretation" : ""}
 - Encourages reflection and empowerment
 `;
 
@@ -205,8 +239,9 @@ Give a cohesive reading that:
 document.getElementById("interpretBtn").addEventListener("click", async () => {
   const cards = [...document.querySelectorAll(".card")].map((_, i) => window.lastDraw[i]);
   const question = document.getElementById("question").value;
+  const spread = document.getElementById("spread").value;
   document.getElementById("interpretation").textContent = "Interpreting...";
 
-  const text = await interpretReading(window.lastDraw, question);
+  const text = await interpretReading(window.lastDraw, question, spread);
   document.getElementById("interpretation").textContent = text;
 });

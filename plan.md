@@ -38,7 +38,7 @@ Build a tarot reading app using Jessi Huntenburg’s deck and interpretation sty
       "Show a clear reversed indicator in UI (e.g., 'Reversed' label) and visually rotate the card image 180deg when reversed",
       "Include reversed state in the interpretation input so the AI can reference it"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "feature",
