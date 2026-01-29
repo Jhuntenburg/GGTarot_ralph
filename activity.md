@@ -127,6 +127,6 @@ Verified that the interpretation prompt structure already implements all require
 - Clicked "Get Reading" button successfully
 - Verified POST request to /api/interpret endpoint (expected error since backend not running)
 - Verified error handling displays user-friendly message
-- Screenshots: screenshots/get-reading-button-initial-20260129-1115.png, screenshots/get-reading-button-enabled-20260129-1115.png, screenshots/get-reading-button-cards-20260129-1115.png, screenshots/get-reading-button-error-20260129-1115.png
+- Screenshots: .playwright-mcp/screenshots/get-reading-button-initial-20260129-1115.png, .playwright-mcp/screenshots/get-reading-button-enabled-20260129-1115.png, .playwright-mcp/screenshots/get-reading-button-cards-20260129-1115.png, .playwright-mcp/screenshots/get-reading-button-error-20260129-1115.png
 
 **Status:** ✅ Task passes - all Get Reading button requirements met
