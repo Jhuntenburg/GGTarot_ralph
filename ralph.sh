@@ -30,6 +30,8 @@ for ((i=1; i<=$1; i++)); do
   echo "" | tee -a "$LOG"
   echo "--- End of iteration $i ---" | tee -a "$LOG"
   echo "" | tee -a "$LOG"
+  pkill -f "python3 -m http.server" 2>/dev/null || true
+  sleep 1
 done
 
 

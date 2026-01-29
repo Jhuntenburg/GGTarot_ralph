@@ -231,11 +231,21 @@ ${positions.length > 0 ? "- Honors the spread positions in your interpretation" 
   const res = await fetch("http://localhost:3001/api/interpret", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt })
+    body: JSON.stringify({
+      prompt,
+      cards,
+      question,
+      spread
+    })
   });
 
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.error || "Failed to get reading");
+  }
+
   const data = await res.json();
-  return data.text;
+  return data.reading;
 }
 
 document.getElementById("interpretBtn").addEventListener("click", async () => {
