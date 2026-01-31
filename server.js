@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from "express";
 import fetch from "node-fetch";
 import cors from "cors";
@@ -130,10 +131,15 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
+// Serve static files from current directory
+app.use(express.static('.'));
+
 app.post("/api/interpret", async (req, res) => {
+  console.log("[/api/interpret] Request received");
   try {
     // Validate request body
     const { cards, question, spread } = req.body;
+    console.log("[/api/interpret] Cards:", cards?.length, "Spread:", spread);
 
     if (!cards || !Array.isArray(cards)) {
       return res.status(400).json({
@@ -173,6 +179,7 @@ app.post("/api/interpret", async (req, res) => {
 
     // Build prompt using the buildPrompt function
     const prompt = buildPrompt(cards, question, spread);
+    console.log("[/api/interpret] Calling Anthropic API...");
 
     // Call Anthropic API
     const r = await fetch("https://api.anthropic.com/v1/messages", {
@@ -183,7 +190,7 @@ app.post("/api/interpret", async (req, res) => {
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        model: "claude-3-5-sonnet-20241022",
+        model: "claude-sonnet-4-20250514",
         max_tokens: 600,
         messages: [{ role: "user", content: prompt }]
       })
@@ -191,7 +198,8 @@ app.post("/api/interpret", async (req, res) => {
 
     // Handle upstream API errors
     if (!r.ok) {
-      console.error("Anthropic API error:", r.status, r.statusText);
+      const errorBody = await r.text();
+      console.error("Anthropic API error:", r.status, r.statusText, errorBody);
       return res.status(500).json({
         error: "Failed to generate reading. Please try again later."
       });
@@ -218,4 +226,9 @@ app.post("/api/interpret", async (req, res) => {
   }
 });
 
-app.listen(3002, () => console.log("Interpreter server on 3002"));
+const PORT = process.env.PORT || 8009;
+app.listen(PORT, () => {
+  console.log(`Server running on http://127.0.0.1:${PORT}`);
+  console.log(`Interpreter mode: ${INTERPRETER_MODE}`);
+  console.log(`API key loaded: ${process.env.ANTHROPIC_API_KEY ? 'Yes (starts with ' + process.env.ANTHROPIC_API_KEY.substring(0, 10) + '...)' : 'NO - CHECK YOUR .env FILE'}`);
+});
